@@ -1,0 +1,134 @@
+definitions:
+  domain.DomainFilterRequest:
+    properties:
+      url:
+        type: string
+    required:
+    - url
+    type: object
+  domain.ErrorResponse:
+    properties:
+      message:
+        description: 错误信息
+        type: string
+    type: object
+  domain.FilterRequest:
+    properties:
+      url:
+        type: string
+    required:
+    - url
+    type: object
+  domain.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  domain.WordFilterRequest:
+    properties:
+      url:
+        type: string
+    required:
+    - url
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    url: http://www.swagger.io/support
+  description: WebBloom Api
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: WebBloom Api
+  version: v1.0.0
+paths:
+  /api/v1/domains:
+    post:
+      description: 验证url的域名是否在黑名单中
+      parameters:
+      - description: URL
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.DomainFilterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Black Domain Verify for URL
+      tags:
+      - filter
+  /api/v1/filter:
+    post:
+      description: 综合验证url是否是恶意连接，先过域名黑名单后检测敏感词；
+      parameters:
+      - description: URL
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.FilterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Comprehensive evaluation for URL
+      tags:
+      - filter
+  /api/v1/ping:
+    get:
+      description: api探活
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+      summary: Ping
+      tags:
+      - Ping
+  /api/v1/sensitive:
+    post:
+      description: 验证url的文本内容是否存在敏感词。
+      parameters:
+      - description: URL
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/domain.WordFilterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Sensitive Word Verify for URL
+      tags:
+      - filter
+securityDefinitions:
+  token:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
